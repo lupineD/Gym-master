@@ -44,7 +44,11 @@ public class Timetable {
         List<TrainingSession> sessions = daySchedule.get(timeOfDay);
 
         // Возвращаем копию списка, чтобы избежать модификации исходных данных
-        return sessions != null ? new ArrayList<>(sessions) : new ArrayList<>();
+        if (sessions != null) {
+            return new ArrayList<>(sessions);  // возвращаем копию списка
+        } else {
+            return new ArrayList<>();  // возвращаем пустой список
+        }
     }
 }
 
@@ -59,4 +63,3 @@ class TimeOfDayComparator implements Comparator<TimeOfDay> {
     }
 }
 
-// sdfsdfssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
