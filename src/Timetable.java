@@ -50,16 +50,16 @@ public class Timetable {
                 Collections.emptyList();
     }
 
-    // Дополнительный метод для получения всех занятий по времени с группировкой
-    public Map<TimeOfDay, List<TrainingSession>> getTrainingSessionsByTimeForDay(DayOfWeek dayOfWeek) {
-        Map<TimeOfDay, List<TrainingSession>> daySchedule = timetable.get(dayOfWeek);
-        // Возвращаем неизменяемую копию
-        Map<TimeOfDay, List<TrainingSession>> result = new TreeMap<>(new TimeOfDayComparator());
-        for (Map.Entry<TimeOfDay, List<TrainingSession>> entry : daySchedule.entrySet()) {
-            result.put(entry.getKey(), Collections.unmodifiableList(entry.getValue()));
-        }
-        return Collections.unmodifiableMap(result);
-    }
+//    // Дополнительный метод для получения всех занятий по времени с группировкой
+//    public Map<TimeOfDay, List<TrainingSession>> getTrainingSessionsByTimeForDay(DayOfWeek dayOfWeek) {
+//        Map<TimeOfDay, List<TrainingSession>> daySchedule = timetable.get(dayOfWeek);
+//        // Возвращаем неизменяемую копию
+//        Map<TimeOfDay, List<TrainingSession>> result = new TreeMap<>(new TimeOfDayComparator());
+//        for (Map.Entry<TimeOfDay, List<TrainingSession>> entry : daySchedule.entrySet()) {
+//            result.put(entry.getKey(), Collections.unmodifiableList(entry.getValue()));
+//        }
+//        return Collections.unmodifiableMap(result);
+//    }
 }
 
 class TimeOfDayComparator implements Comparator<TimeOfDay> {
