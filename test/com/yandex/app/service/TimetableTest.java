@@ -175,10 +175,19 @@ public class TimetableTest {
 
         // Проверяем, что занятия возвращаются в правильном хронологическом порядке
         assertEquals(4, sessions.size());
-        assertEquals(new TimeOfDay(9, 0), sessions.get(0).getTimeOfDay());
-        assertEquals(new TimeOfDay(11, 15), sessions.get(1).getTimeOfDay());
-        assertEquals(new TimeOfDay(15, 30), sessions.get(2).getTimeOfDay());
-        assertEquals(new TimeOfDay(18, 45), sessions.get(3).getTimeOfDay());
+
+        // Сравниваем по значениям времени, а не по объектам
+        assertEquals(9, sessions.get(0).getTimeOfDay().getHours());
+        assertEquals(0, sessions.get(0).getTimeOfDay().getMinutes());
+
+        assertEquals(11, sessions.get(1).getTimeOfDay().getHours());
+        assertEquals(15, sessions.get(1).getTimeOfDay().getMinutes());
+
+        assertEquals(15, sessions.get(2).getTimeOfDay().getHours());
+        assertEquals(30, sessions.get(2).getTimeOfDay().getMinutes());
+
+        assertEquals(18, sessions.get(3).getTimeOfDay().getHours());
+        assertEquals(45, sessions.get(3).getTimeOfDay().getMinutes());
     }
 
     // Тесты для нового метода getCountByCoaches:
