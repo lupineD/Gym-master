@@ -1,3 +1,10 @@
+package com.yandex.app.service;
+
+import com.yandex.app.model.Coach;
+import com.yandex.app.model.DayOfWeek;
+import com.yandex.app.model.TimeOfDay;
+import com.yandex.app.model.TrainingSession;
+
 import java.util.*;
 
 public class Timetable {

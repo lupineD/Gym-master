@@ -1,3 +1,5 @@
+package com.yandex.app.model;
+
 public class Group {
     //название группы
     private String title;

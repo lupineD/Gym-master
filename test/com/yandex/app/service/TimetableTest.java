@@ -1,3 +1,6 @@
+package com.yandex.app.service;
+
+import com.yandex.app.model.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -143,6 +146,8 @@ public class TimetableTest {
     }
 
     // 3 Тест на порядок занятий при разном времени
+    // Этот тест гарантирует, что пользователи всегда видят расписание в логичном,
+    // упорядоченном виде, а не в том порядке, в котором данные были загружены в систему
     @Test
     void testChronologicalOrder() {
         Timetable timetable = new Timetable();
@@ -176,7 +181,7 @@ public class TimetableTest {
         assertEquals(new TimeOfDay(18, 45), sessions.get(3).getTimeOfDay());
     }
 
-    // Тесты для нового метода:
+    // Тесты для нового метода getCountByCoaches:
     // 1 Тест на количество тренировок в неделю
     @Test
     void testGetCountByCoaches() {
@@ -221,7 +226,7 @@ public class TimetableTest {
         assertEquals(2, counts.get(2));
     }
 
-    // Тесты для нового метода:
+    // Тесты для нового метода getCountByCoaches:
     // 2 поведение метода когда в расписании нет ни одного занятия.
     @Test
     void testGetCountByCoachesEmptyTimetable() {
@@ -232,7 +237,7 @@ public class TimetableTest {
         assertTrue(result.isEmpty());
     }
 
-    // Тесты для нового метода:
+    // Тесты для нового метода getCountByCoaches:
     // 3 проверяет крайний случай, когда в расписании есть тренировки только у одного тренера.
     @Test
     void testGetCountByCoachesSingleCoach() {

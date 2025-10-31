@@ -1,3 +1,5 @@
+package com.yandex.app.model;
+
 public class TimeOfDay {
 
     //часы (от 0 до 23)

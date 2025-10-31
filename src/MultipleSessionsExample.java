@@ -1,3 +1,6 @@
+import com.yandex.app.model.*;
+import com.yandex.app.service.Timetable;
+
 import java.util.*;
 
 public class MultipleSessionsExample {
