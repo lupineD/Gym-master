@@ -24,6 +24,7 @@ public class Timetable {
         }
 
         // Добавляем занятие в список для данного времени
+        // Теперь в одно время может быть несколько тренировок
         daySchedule.get(time).add(trainingSession);
     }
 
@@ -32,27 +33,35 @@ public class Timetable {
         List<TrainingSession> result = new ArrayList<>();
 
         // Собираем все занятия за день в хронологическом порядке
-        for (List<TrainingSession> sessions : daySchedule.values()) {
-            result.addAll(sessions);
+        for (Map.Entry<TimeOfDay, List<TrainingSession>> entry : daySchedule.entrySet()) {
+            result.addAll(entry.getValue());
         }
 
-        return result;
+        return Collections.unmodifiableList(result);
     }
 
     public List<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
         Map<TimeOfDay, List<TrainingSession>> daySchedule = timetable.get(dayOfWeek);
         List<TrainingSession> sessions = daySchedule.get(timeOfDay);
 
-        // Возвращаем копию списка, чтобы избежать модификации исходных данных
-        if (sessions != null) {
-            return new ArrayList<>(sessions);  // возвращаем копию списка
-        } else {
-            return new ArrayList<>();  // возвращаем пустой список
+        // Возвращаем неизменяемый список
+        return sessions != null ?
+                Collections.unmodifiableList(sessions) :
+                Collections.emptyList();
+    }
+
+    // Дополнительный метод для получения всех занятий по времени с группировкой
+    public Map<TimeOfDay, List<TrainingSession>> getTrainingSessionsByTimeForDay(DayOfWeek dayOfWeek) {
+        Map<TimeOfDay, List<TrainingSession>> daySchedule = timetable.get(dayOfWeek);
+        // Возвращаем неизменяемую копию
+        Map<TimeOfDay, List<TrainingSession>> result = new TreeMap<>(new TimeOfDayComparator());
+        for (Map.Entry<TimeOfDay, List<TrainingSession>> entry : daySchedule.entrySet()) {
+            result.put(entry.getKey(), Collections.unmodifiableList(entry.getValue()));
         }
+        return Collections.unmodifiableMap(result);
     }
 }
 
-// Компаратор для сравнения времени
 class TimeOfDayComparator implements Comparator<TimeOfDay> {
     @Override
     public int compare(TimeOfDay time1, TimeOfDay time2) {
@@ -62,5 +71,3 @@ class TimeOfDayComparator implements Comparator<TimeOfDay> {
         return Integer.compare(time1.getMinutes(), time2.getMinutes());
     }
 }
-
-//аааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааа

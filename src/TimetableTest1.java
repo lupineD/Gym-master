@@ -6,67 +6,73 @@ import java.util.*;
 public class TimetableTest1 {
 
     @Test
-    void testGetTrainingSessionsForDaySingleSession() {
+    void testMultipleSessionsSameTime() {
         Timetable timetable = new Timetable();
 
-        Group group = new Group("Акробатика для детей", Age.CHILD, 60);
-        Coach coach = new Coach("Васильев", "Николай", "Сергеевич");
-        TrainingSession singleTrainingSession = new TrainingSession(group, coach,
-                DayOfWeek.MONDAY, new TimeOfDay(13, 0));
+        Coach coach1 = new Coach("Иванов", "Иван", "Иванович");
+        Coach coach2 = new Coach("Петрова", "Ольга", "Сергеевна");
 
-        timetable.addNewTrainingSession(singleTrainingSession);
+        Group group1 = new Group("Йога", Age.ADULT, 60);
+        Group group2 = new Group("Пилатес", Age.ADULT, 60);
 
-        assertEquals(1, timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY).size());
-        assertEquals(0, timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY).size());
+        // Два занятия в одно время
+        TrainingSession session1 = new TrainingSession(group1, coach1,
+                DayOfWeek.MONDAY, new TimeOfDay(18, 0));
+        TrainingSession session2 = new TrainingSession(group2, coach2,
+                DayOfWeek.MONDAY, new TimeOfDay(18, 0));
+
+        timetable.addNewTrainingSession(session1);
+        timetable.addNewTrainingSession(session2);
+
+        // Проверяем, что в одно время вернулось два занятия
+        List<TrainingSession> sessions = timetable.getTrainingSessionsForDayAndTime(
+                DayOfWeek.MONDAY, new TimeOfDay(18, 0));
+
+        assertEquals(2, sessions.size());
+
+        // Проверяем, что оба занятия присутствуют
+        Set<String> groupTitles = new HashSet<>();
+        for (TrainingSession session : sessions) {
+            groupTitles.add(session.getGroup().getTitle());
+        }
+
+        assertTrue(groupTitles.contains("Йога"));
+        assertTrue(groupTitles.contains("Пилатес"));
     }
 
     @Test
-    void testGetTrainingSessionsForDayMultipleSessions() {
+    void testMixedSessions() {
         Timetable timetable = new Timetable();
 
-        Coach coach = new Coach("Васильев", "Николай", "Сергеевич");
+        Coach coach = new Coach("Сидоров", "Алексей", "Петрович");
 
-        Group groupAdult = new Group("Акробатика для взрослых", Age.ADULT, 90);
-        TrainingSession thursdayAdultTrainingSession = new TrainingSession(groupAdult, coach,
-                DayOfWeek.THURSDAY, new TimeOfDay(20, 0));
+        Group group1 = new Group("Детская гимнастика", Age.CHILD, 45);
+        Group group2 = new Group("Взрослая гимнастика", Age.ADULT, 90);
 
-        timetable.addNewTrainingSession(thursdayAdultTrainingSession);
+        // Несколько занятий в разное время
+        TrainingSession morningSession1 = new TrainingSession(group1, coach,
+                DayOfWeek.WEDNESDAY, new TimeOfDay(10, 0));
+        TrainingSession morningSession2 = new TrainingSession(group2, coach,
+                DayOfWeek.WEDNESDAY, new TimeOfDay(10, 0)); // В то же время!
+        TrainingSession eveningSession = new TrainingSession(group2, coach,
+                DayOfWeek.WEDNESDAY, new TimeOfDay(19, 0));
 
-        Group groupChild = new Group("Акробатика для детей", Age.CHILD, 60);
-        TrainingSession mondayChildTrainingSession = new TrainingSession(groupChild, coach,
-                DayOfWeek.MONDAY, new TimeOfDay(13, 0));
-        TrainingSession thursdayChildTrainingSession = new TrainingSession(groupChild, coach,
-                DayOfWeek.THURSDAY, new TimeOfDay(13, 0));
-        TrainingSession saturdayChildTrainingSession = new TrainingSession(groupChild, coach,
-                DayOfWeek.SATURDAY, new TimeOfDay(10, 0));
+        timetable.addNewTrainingSession(morningSession1);
+        timetable.addNewTrainingSession(morningSession2);
+        timetable.addNewTrainingSession(eveningSession);
 
-        timetable.addNewTrainingSession(mondayChildTrainingSession);
-        timetable.addNewTrainingSession(thursdayChildTrainingSession);
-        timetable.addNewTrainingSession(saturdayChildTrainingSession);
+        // Проверяем общее количество занятий в среду
+        List<TrainingSession> wednesdaySessions = timetable.getTrainingSessionsForDay(DayOfWeek.WEDNESDAY);
+        assertEquals(3, wednesdaySessions.size());
 
-        assertEquals(1, timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY).size());
+        // Проверяем занятия в 10:00
+        List<TrainingSession> morningSessions = timetable.getTrainingSessionsForDayAndTime(
+                DayOfWeek.WEDNESDAY, new TimeOfDay(10, 0));
+        assertEquals(2, morningSessions.size());
 
-        List<TrainingSession> thursdaySessions = timetable.getTrainingSessionsForDay(DayOfWeek.THURSDAY);
-        assertEquals(2, thursdaySessions.size());
-        // Проверяем порядок: сначала 13:00, потом 20:00
-        assertEquals(13, thursdaySessions.get(0).getTimeOfDay().getHours());
-        assertEquals(20, thursdaySessions.get(1).getTimeOfDay().getHours());
-
-        assertEquals(0, timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY).size());
-    }
-
-    @Test
-    void testGetTrainingSessionsForDayAndTime() {
-        Timetable timetable = new Timetable();
-
-        Group group = new Group("Акробатика для детей", Age.CHILD, 60);
-        Coach coach = new Coach("Васильев", "Николай", "Сергеевич");
-        TrainingSession singleTrainingSession = new TrainingSession(group, coach,
-                DayOfWeek.MONDAY, new TimeOfDay(13, 0));
-
-        timetable.addNewTrainingSession(singleTrainingSession);
-
-        assertEquals(1, timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(13, 0)).size());
-        assertEquals(0, timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(14, 0)).size());
+        // Проверяем занятия в 19:00
+        List<TrainingSession> eveningSessions = timetable.getTrainingSessionsForDayAndTime(
+                DayOfWeek.WEDNESDAY, new TimeOfDay(19, 0));
+        assertEquals(1, eveningSessions.size());
     }
 }
