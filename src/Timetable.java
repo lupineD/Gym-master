@@ -50,16 +50,38 @@ public class Timetable {
                 Collections.emptyList();
     }
 
-//    // Дополнительный метод для получения всех занятий по времени с группировкой
-//    public Map<TimeOfDay, List<TrainingSession>> getTrainingSessionsByTimeForDay(DayOfWeek dayOfWeek) {
-//        Map<TimeOfDay, List<TrainingSession>> daySchedule = timetable.get(dayOfWeek);
-//        // Возвращаем неизменяемую копию
-//        Map<TimeOfDay, List<TrainingSession>> result = new TreeMap<>(new TimeOfDayComparator());
-//        for (Map.Entry<TimeOfDay, List<TrainingSession>> entry : daySchedule.entrySet()) {
-//            result.put(entry.getKey(), Collections.unmodifiableList(entry.getValue()));
-//        }
-//        return Collections.unmodifiableMap(result);
-//    }
+    public Map<Coach, Integer> getCountByCoaches() {
+        Map<Coach, Integer> coachCounts = new HashMap<>();
+
+        // Собираем статистику по всем дням недели
+        for (DayOfWeek day : DayOfWeek.values()) {
+            Map<TimeOfDay, List<TrainingSession>> daySchedule = timetable.get(day);
+            for (List<TrainingSession> sessions : daySchedule.values()) {
+                for (TrainingSession session : sessions) {
+                    Coach coach = session.getCoach();
+                    coachCounts.put(coach, coachCounts.getOrDefault(coach, 0) + 1);
+                }
+            }
+        }
+
+        // Сортируем по убыванию количества тренировок
+        return CounterOfTrainings(coachCounts);
+    }
+
+    private Map<Coach, Integer> CounterOfTrainings(Map<Coach, Integer> map) {
+        List<Map.Entry<Coach, Integer>> entries = new ArrayList<>(map.entrySet());
+
+        // Сортируем по убыванию значения (количества тренировок)
+        entries.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+        // Создаем LinkedHashMap для сохранения порядка
+        Map<Coach, Integer> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<Coach, Integer> entry : entries) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+    }
 }
 
 class TimeOfDayComparator implements Comparator<TimeOfDay> {
