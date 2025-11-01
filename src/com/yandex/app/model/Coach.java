@@ -1,3 +1,5 @@
+package com.yandex.app.model;
+
 public class Coach {
 
     //фамилия
