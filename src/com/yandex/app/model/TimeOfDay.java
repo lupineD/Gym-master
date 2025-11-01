@@ -1,4 +1,5 @@
 package com.yandex.app.model;
+import java.util. *;
 
 public class TimeOfDay {
 
@@ -18,5 +19,18 @@ public class TimeOfDay {
 
     public int getMinutes() {
         return minutes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TimeOfDay timeOfDay = (TimeOfDay) o;
+        return hours == timeOfDay.hours && minutes == timeOfDay.minutes;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hours, minutes);
     }
 }

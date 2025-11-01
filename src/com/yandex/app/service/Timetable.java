@@ -72,10 +72,10 @@ public class Timetable {
         }
 
         // Сортируем по убыванию количества тренировок
-        return CounterOfTrainings(coachCounts);
+        return counterOfTrainings(coachCounts);
     }
 
-    private Map<Coach, Integer> CounterOfTrainings(Map<Coach, Integer> map) {
+    private Map<Coach, Integer> counterOfTrainings(Map<Coach, Integer> map) {
         List<Map.Entry<Coach, Integer>> entries = new ArrayList<>(map.entrySet());
 
         // Сортируем по убыванию значения (количества тренировок)
